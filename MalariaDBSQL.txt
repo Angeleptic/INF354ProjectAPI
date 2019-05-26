@@ -1,0 +1,156 @@
+CREATE DATABASE Malaria
+GO
+
+USE Malaria
+GO
+
+CREATE TABLE [Malaria_Type] (
+  [Malaria_Type_ID] int IDENTITY(1,1) PRIMARY KEY,
+  [Malaria_Type_Name] varchar(50)
+);
+
+INSERT INTO [dbo].[Malaria_Type] VALUES ('Plasmodium falciparum ')
+INSERT INTO [dbo].[Malaria_Type] VALUES ('Plasmodium vivax ')
+INSERT INTO [dbo].[Malaria_Type] VALUES ('Plasmodium ovale ')
+INSERT INTO [dbo].[Malaria_Type] VALUES ('Plasmodium malariae ')
+INSERT INTO [dbo].[Malaria_Type] VALUES ('Plasmodium knowlesi ')
+
+CREATE TABLE [Preventative_Measure] (
+  [Preventative_Measure_ID] int IDENTITY(1,1) PRIMARY KEY,
+  [Measure_Description] varchar(50),
+  [Malaria_Type_ID] int FOREIGN KEY REFERENCES [Malaria_Type]([Malaria_Type_ID])
+);
+
+INSERT INTO [dbo].[Preventative_Measure] VALUES ('Prevent mosquito bites. Wear long sleeve shirts and pants to cover your skin all the time',1)
+INSERT INTO [dbo].[Preventative_Measure] VALUES ('Apply insect repellent, containing DEET to skin and clothing ',1)
+INSERT INTO [dbo].[Preventative_Measure] VALUES ('Sleep under a net, treated with insecticide',1)
+INSERT INTO [dbo].[Preventative_Measure] VALUES ('Seek early treatment for any flu-like illness ',1)
+INSERT INTO [dbo].[Preventative_Measure] VALUES ('Take chemoprolaxis before entering the malaria area',1)
+
+CREATE TABLE [Symptom] (
+  [Symptom_ID] int IDENTITY(1,1) PRIMARY KEY,
+  [Symptom_Name] varchar(50),
+  [Symptom_Description] varchar(50)
+);
+
+INSERT INTO [dbo].[Symptom] VALUES ('Fever','SA')
+INSERT INTO [dbo].[Symptom] VALUES ('Headache','SA')
+INSERT INTO [dbo].[Symptom] VALUES ('fatigue','SA')
+INSERT INTO [dbo].[Symptom] VALUES ('muscle pain','SA')
+INSERT INTO [dbo].[Symptom] VALUES ('Back pain','SA')
+INSERT INTO [dbo].[Symptom] VALUES ('Chills','SA')
+INSERT INTO [dbo].[Symptom] VALUES ('Sweating','SA')
+INSERT INTO [dbo].[Symptom] VALUES ('dry cough','SA')
+INSERT INTO [dbo].[Symptom] VALUES ('nausea','SA')
+INSERT INTO [dbo].[Symptom] VALUES ('vomiting','SA')
+
+
+CREATE TABLE [Country] (
+  [Country_ID] int IDENTITY(1,1) PRIMARY KEY,
+  [Country_Name] varchar(50),
+  [Malaria_Type_ID] int FOREIGN KEY REFERENCES [Malaria_Type]([Malaria_Type_ID])
+);
+
+INSERT INTO [dbo].[Country] VALUES ('Botswana',1)
+INSERT INTO [dbo].[Country] VALUES ('Angola',1)
+INSERT INTO [dbo].[Country] VALUES ('Benin',1)
+
+CREATE TABLE [Region] (
+  [Region_ID] int IDENTITY(1,1) PRIMARY KEY,
+  [Region_Name] varchar(50),
+  [Call_Centre_Number] varchar(32),
+  [Country_ID] int FOREIGN KEY REFERENCES [Country]([Country_ID])
+);
+
+INSERT INTO [dbo].[Region] VALUES ('Okavango','RA',1)
+INSERT INTO [dbo].[Region] VALUES ('Ngami','RA',1)
+INSERT INTO [dbo].[Region] VALUES ('Botete','RA',1)
+
+CREATE TABLE [Cause] (
+  [Cause_ID] int IDENTITY(1,1) PRIMARY KEY,
+  [Cause_Name] varchar(50),
+  [Malaria_Type_ID] int FOREIGN KEY REFERENCES [Malaria_Type]([Malaria_Type_ID])
+);
+
+INSERT INTO [dbo].[Cause] VALUES ('CCA',1)
+
+CREATE TABLE [Symptom_Type] (
+  [Malaria_Type_ID] int FOREIGN KEY REFERENCES [Malaria_Type]([Malaria_Type_ID]),
+  [Symptom_ID] int FOREIGN KEY REFERENCES [Symptom]([Symptom_ID]),
+  CONSTRAINT [Symptom_Type_ID] PRIMARY KEY ([Malaria_Type_ID],[Symptom_ID])
+);
+
+INSERT INTO [dbo].[Symptom_Type] VALUES (1,1)
+
+CREATE TABLE [Malaria] (
+  [Malaria_ID] int IDENTITY(1,1) PRIMARY KEY,
+  [Malaria_Background] varchar(500)
+);
+
+INSERT INTO [dbo].[Malaria] VALUES ('BG')
+
+CREATE TABLE [Vaccination] (
+  [Vaccination_ID] int IDENTITY(1,1) PRIMARY KEY,
+  [Vaccination_Description] varchar(50),
+  [Malaria_ID] int FOREIGN KEY REFERENCES [Malaria]([Malaria_ID])
+);
+
+INSERT INTO [dbo].[Vaccination] VALUES ('VA',1)
+
+CREATE TABLE [Infection_Cycle] (
+  [Infection_Cycle_ID] int IDENTITY(1,1) PRIMARY KEY,
+  [PhaseA] varchar(32),
+  [DescriptionA] varchar(250),
+  [PhaseB] varchar(32),
+  [DescriptionB] varchar(250),
+  [PhaseC] varchar(32),
+  [DescriptionC] varchar(250),
+  [PhaseD] varchar(32),
+  [DescriptionD] varchar(250),
+  [Malaria_ID] int FOREIGN KEY REFERENCES [Malaria]([Malaria_ID])
+);
+
+INSERT INTO [dbo].[Infection_Cycle] VALUES ('Mosquito gets infected','PA','Mosquito infects person','PB','Infection moves to liver','PC','infection moves to blood cells','PD',1)
+
+CREATE TABLE [Quick_Fact] (
+  [Quick_Fact_ID] int IDENTITY(1,1) PRIMARY KEY,
+  [Fact] varchar(250),
+  [Malaria_ID] int FOREIGN KEY REFERENCES [Malaria]([Malaria_ID])
+);
+
+INSERT INTO [dbo].[Quick_Fact] VALUES ('Malaria is a preventable, treatable disease',1)
+INSERT INTO [dbo].[Quick_Fact] VALUES ('FB',1)
+INSERT INTO [dbo].[Quick_Fact] VALUES ('FC',1)
+INSERT INTO [dbo].[Quick_Fact] VALUES ('FD',1)
+INSERT INTO [dbo].[Quick_Fact] VALUES ('FE',1)
+
+CREATE TABLE [User] (
+  [User_ID] int IDENTITY(1,1) PRIMARY KEY,
+  [User_Name] varchar(50),
+  [User_Surname] varchar(50),
+  [User_Contact_Number] varchar(32),
+  [User_Email] varchar(50),
+  [User_Password] Varchar(50)
+);
+
+INSERT INTO [dbo].[User] VALUES ('Ash','Left','0742563216','u16007192@tuks.co.za','admin')
+INSERT INTO [dbo].[User] VALUES ('Nick','Rick','0124563256','u16037192@tuks.co.za','admin')
+INSERT INTO [dbo].[User] VALUES ('Jack','Sparrow','0124206395','u36007192@tuks.co.za','admin')
+INSERT INTO [dbo].[User] VALUES ('Fred','Sematimba','0124205698','u14007192@tuks.co.za','admin')
+INSERT INTO [dbo].[User] VALUES ('Layla','Skywalks','0856548921','u16407192@tuks.co.za','admin')
+
+
+CREATE TABLE [Access_Level] (
+  [Access_Level_ID] Int IDENTITY(1,1) PRIMARY KEY,
+  [Access_Level_Description] varchar(50),
+  [User_ID] int FOREIGN KEY REFERENCES [User]([User_ID])
+);
+
+INSERT INTO [dbo].[Access_Level] VALUES ('Admin',1)
+INSERT INTO [dbo].[Access_Level] VALUES ('Health Admin',2)
+INSERT INTO [dbo].[Access_Level] VALUES ('Guest',3)
+
+
+
+
+
